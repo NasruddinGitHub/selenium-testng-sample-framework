@@ -1,0 +1,32 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.citibank.ui.automation</groupId>
+	<artifactId>selenium-testng-sample-framework</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<properties>
+		<seleniumJavaVersion>4.27.0</seleniumJavaVersion>
+		<testNGVersion>6.14.3</testNGVersion>
+		<extentreportsVersion>5.1.2</extentreportsVersion>
+	</properties>
+	<dependencies><!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>${seleniumJavaVersion}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>${testNGVersion}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.aventstack/extentreports -->
+		<dependency>
+			<groupId>com.aventstack</groupId>
+			<artifactId>extentreports</artifactId>
+			<version>${extentreportsVersion}</version>
+		</dependency>
+	</dependencies>
+</project>

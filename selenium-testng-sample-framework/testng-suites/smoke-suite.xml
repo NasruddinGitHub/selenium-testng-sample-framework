@@ -1,0 +1,105 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="Swag Labs Smoke Suite" verbose="5">
+	<listeners>
+		<listener class-name="com.citibank.automation.helpers.RetryListenerClass" />
+	</listeners>
+	<test name="Login with valid username and valid password">
+		<classes>
+			<class name="com.citibank.automation.testclasses.LoginTest">
+				<methods>
+					<parameter name="browser" value="chrome" />
+					<parameter name="username" value="standard_user" />
+					<parameter name="password" value="secret_sauce" />
+					<include
+						name="validateIfUserIsAbleToLoginWithValidCredentials">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test>
+	<test name="Login with valid username and invalid password">
+		<classes>
+			<class name="com.citibank.automation.testclasses.LoginTest">
+				<methods>
+					<parameter name="browser" value="edge" />
+					<parameter name="username" value="standard_user" />
+					<parameter name="password" value="invalid_password" />
+					<include
+						name="validateIfUserIsAbleToLoginWithValidUsernameAndInvalidPassword">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test>
+	<test name="Login with invalid username and valid password">
+		<classes>
+			<class name="com.citibank.automation.testclasses.LoginTest">
+				<methods>
+					<parameter name="browser" value="firefox" />
+					<parameter name="username" value="invalid_username" />
+					<parameter name="password" value="secret_sauce" />
+					<include
+						name="validateIfUserIsAbleToLoginWithInvalidUsernameAndValidPassword">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test>
+	<test name="Login with invalid username and invalid password">
+		<classes>
+			<class name="com.citibank.automation.testclasses.LoginTest">
+				<methods>
+					<parameter name="browser" value="chrome" />
+					<parameter name="username" value="invalid_username" />
+					<parameter name="password" value="invalid_password" />
+					<include
+						name="validateIfUserIsAbleToLoginWithInvalidUsernameAndInvalidPassword">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test>
+	<test name="Login with empty username and empty password">
+		<classes>
+			<class name="com.citibank.automation.testclasses.LoginTest">
+				<methods>
+					<parameter name="browser" value="edge" />
+					<parameter name="username" value="" />
+					<parameter name="password" value="" />
+					<include
+						name="validateIfUserIsAbleToLoginWithEmptyUsernameAndEmptyPassword">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test>
+	<test name="Login with empty username and valid password">
+		<classes>
+			<class name="com.citibank.automation.testclasses.LoginTest">
+				<methods>
+					<parameter name="browser" value="firefox" />
+					<parameter name="username" value="" />
+					<parameter name="password" value="secret_sauce" />
+					<include
+						name="validateIfUserIsAbleToLoginWithEmptyUsernameAndValidPassword">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test>
+	<test name="Login with valid username and empty password">
+		<classes>
+			<class name="com.citibank.automation.testclasses.LoginTest">
+				<methods>
+					<parameter name="browser" value="" />
+					<parameter name="username" value="standard_user" />
+					<parameter name="password" value="" />
+					<include
+						name="validateIfUserIsAbleToLoginWithValidUsernameAndEmptyPassword">
+					</include>
+				</methods>
+			</class>
+		</classes>
+	</test>
+</suite>
