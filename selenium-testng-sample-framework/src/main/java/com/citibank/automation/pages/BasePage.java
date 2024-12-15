@@ -48,10 +48,13 @@ public class BasePage {
 		try {
 			waitUntilElementIsVisible(locator, waitTimeInSeconds);
 			return true;
-		}catch(TimeoutException e) {
+		} catch (TimeoutException e) {
 			return false;
 		}
 	}
-	
 
+	public String getText(By locator, int timeout) {
+		WebElement element = waitAndFindElement(locator, timeout);
+		return element.getText().trim();
+	}
 }
