@@ -19,75 +19,75 @@ public class ReportUtil {
 
 	private static ExtentReports extentReports;
 
-	private static ExtentTest extentTest;
+	private static ThreadLocal<ExtentTest> extentTest = new ThreadLocal<>();
 
-	public static void initReport(String path) {
+	public static synchronized void initReport(String path) {
 		intializeExtentSparkReport(path);
 		initializeExtentReport();
 		attachSparkReport();
 	}
 
-	public static ExtentSparkReporter intializeExtentSparkReport(String path) {
+	public static synchronized ExtentSparkReporter intializeExtentSparkReport(String path) {
 		return extentSparkReporter = new ExtentSparkReporter(path);
 	}
 
-	public static ExtentReports initializeExtentReport() {
+	public static synchronized ExtentReports initializeExtentReport() {
 		return extentReports = new ExtentReports();
 	}
 
-	public static ExtentTest initializeExtentTest(String testName) {
-		return createTest(testName);
+	public static synchronized void initializeExtentTest(String testName) {
+		createTest(testName);
 	}
 
-	public static ExtentTest initializeExtentTest(String testName, String description) {
-		return createTest(testName, description);
+	public static synchronized void initializeExtentTest(String testName, String description) {
+		createTest(testName, description);
 	}
 
-	public static void attachSparkReport() {
+	public static synchronized void attachSparkReport() {
 		extentReports.attachReporter(extentSparkReporter);
 	}
 
-	public static ExtentSparkReporterConfig getExtentSparkReporterConfig() {
+	public static synchronized ExtentSparkReporterConfig getExtentSparkReporterConfig() {
 		return extentSparkReporter.config();
 	}
 
-	public static void setReportTitle(String reportTitle) {
+	public static synchronized void setReportTitle(String reportTitle) {
 		getExtentSparkReporterConfig().setDocumentTitle(reportTitle);
 	}
 
-	public static void setReportName(String reportName) {
+	public static synchronized void setReportName(String reportName) {
 		getExtentSparkReporterConfig().setReportName(reportName);
 	}
 
-	public static void setTheme(Theme theme) {
+	public static synchronized void setTheme(Theme theme) {
 		getExtentSparkReporterConfig().setTheme(theme);
 	}
 
-	public static void setTimeStampFormat(String timeStampFormat) {
+	public static synchronized void setTimeStampFormat(String timeStampFormat) {
 		getExtentSparkReporterConfig().setTimeStampFormat(timeStampFormat);
 	}
 
-	public static String getDocumentTitle() {
+	public static synchronized String getDocumentTitle() {
 		return getExtentSparkReporterConfig().getDocumentTitle();
 	}
 
-	public static String getReportName() {
+	public static synchronized String getReportName() {
 		return getExtentSparkReporterConfig().getReportName();
 	}
 
-	public static String getTimeStampFormat() {
+	public static synchronized String getTimeStampFormat() {
 		return getExtentSparkReporterConfig().getTimeStampFormat();
 	}
 
-	public static Theme getTheme() {
+	public static synchronized Theme getTheme() {
 		return getExtentSparkReporterConfig().getTheme();
 	}
 
-	public static File getFile() {
+	public static synchronized File getFile() {
 		return extentSparkReporter.getFile();
 	}
 
-	public static void loadJSONConfig(File file) {
+	public static synchronized void loadJSONConfig(File file) {
 		try {
 			extentSparkReporter.loadJSONConfig(file);
 		} catch (IOException e) {
@@ -95,7 +95,7 @@ public class ReportUtil {
 		}
 	}
 
-	public static void loadJSONConfig(String jsonString) {
+	public static synchronized void loadJSONConfig(String jsonString) {
 		try {
 			extentSparkReporter.loadJSONConfig(jsonString);
 		} catch (IOException e) {
@@ -103,7 +103,7 @@ public class ReportUtil {
 		}
 	}
 
-	public static void loadXMLConfig(File xmlFile) {
+	public static synchronized void loadXMLConfig(File xmlFile) {
 		try {
 			extentSparkReporter.loadXMLConfig(xmlFile);
 		} catch (IOException e) {
@@ -111,7 +111,7 @@ public class ReportUtil {
 		}
 	}
 
-	public static void loadXMLConfig(String xmlFile) {
+	public static synchronized void loadXMLConfig(String xmlFile) {
 		try {
 			extentSparkReporter.loadXMLConfig(xmlFile);
 		} catch (IOException e) {
@@ -119,189 +119,193 @@ public class ReportUtil {
 		}
 	}
 
-	public static ExtentTest createTest(String name) {
-		extentTest = extentReports.createTest(name);
-		return extentTest;
+	public static synchronized ExtentTest getTest() {
+		return extentTest.get();
 	}
 
-	public static ExtentTest createTest(String name, String description) {
-		extentTest = extentReports.createTest(name, description);
-		return extentTest;
+	public static synchronized void createTest(String name) {
+		ExtentTest test = extentReports.createTest(name);
+		extentTest.set(test);
 	}
 
-	public static void flush() {
+	public static synchronized void createTest(String name, String description) {
+		ExtentTest test = extentReports.createTest(name, description);
+		extentTest.set(test);
+	}
+
+	public static synchronized void flush() {
 		extentReports.flush();
 	}
 
-	public static void removeTest(ExtentTest test) {
+	public static synchronized void removeTest(ExtentTest test) {
 		extentReports.removeTest(test);
 	}
 
-	public static void removeTest(String name) {
+	public static synchronized void removeTest(String name) {
 		extentReports.removeTest(name);
 	}
 
-	public static void setSystemInfo(String k, String v) {
+	public static synchronized void setSystemInfo(String k, String v) {
 		extentReports.setSystemInfo(k, v);
 	}
 
-	public static ExtentTest assignAuthor(String... autor) {
-		return extentTest.assignAuthor(autor);
+	public static synchronized ExtentTest assignAuthor(String... autor) {
+		return getTest().assignAuthor(autor);
 	}
 
-	public static ExtentTest assignCategory(String... category) {
-		return extentTest.assignCategory(category);
+	public static synchronized ExtentTest assignCategory(String... category) {
+		return getTest().assignCategory(category);
 	}
 
-	public static ExtentTest assignDevice(String... device) {
-		return extentTest.assignDevice(device);
+	public static synchronized ExtentTest assignDevice(String... device) {
+		return getTest().assignDevice(device);
 	}
 
-	public static ExtentTest createNode(String name) {
-		return extentTest.createNode(name);
+	public static synchronized ExtentTest createNode(String name) {
+		return getTest().createNode(name);
 	}
 
-	public static ExtentTest createNode(String name, String description) {
-		return extentTest.createNode(name, description);
+	public static synchronized ExtentTest createNode(String name, String description) {
+		return getTest().createNode(name, description);
 	}
 
-	public static ExtentTest fail(Markup markup) {
-		return extentTest.fail(markup);
+	public static synchronized ExtentTest fail(Markup markup) {
+		return getTest().fail(markup);
 	}
 
-	public static ExtentTest fail(Media media) {
-		return extentTest.fail(media);
+	public static synchronized ExtentTest fail(Media media) {
+		return getTest().fail(media);
 	}
 
-	public static ExtentTest fail(String details) {
-		return extentTest.fail(details);
+	public static synchronized ExtentTest fail(String details) {
+		return getTest().fail(details);
 	}
 
-	public static ExtentTest fail(Throwable t) {
-		return extentTest.fail(t);
+	public static synchronized ExtentTest fail(Throwable t) {
+		return getTest().fail(t);
 	}
 
-	public static ExtentTest fail(String details, Media media) {
-		return extentTest.fail(details, media);
+	public static synchronized ExtentTest fail(String details, Media media) {
+		return getTest().fail(details, media);
 	}
 
-	public static ExtentTest fail(Throwable t, Media media) {
-		return extentTest.fail(t, media);
+	public static synchronized ExtentTest fail(Throwable t, Media media) {
+		return getTest().fail(t, media);
 	}
 
-	public static ExtentTest pass(Markup markup) {
-		return extentTest.pass(markup);
+	public static synchronized ExtentTest pass(Markup markup) {
+		return getTest().pass(markup);
 	}
 
-	public static ExtentTest pass(Media media) {
-		return extentTest.pass(media);
+	public static synchronized ExtentTest pass(Media media) {
+		return getTest().pass(media);
 	}
 
-	public static ExtentTest pass(String details) {
-		return extentTest.pass(details);
+	public static synchronized ExtentTest pass(String details) {
+		return getTest().pass(details);
 	}
 
-	public static ExtentTest pass(Throwable t) {
-		return extentTest.pass(t);
+	public static synchronized ExtentTest pass(Throwable t) {
+		return getTest().pass(t);
 	}
 
-	public static ExtentTest pass(String details, Media media) {
-		return extentTest.pass(details, media);
+	public static synchronized ExtentTest pass(String details, Media media) {
+		return getTest().pass(details, media);
 	}
 
-	public static ExtentTest pass(Throwable t, Media media) {
-		return extentTest.pass(t, media);
+	public static synchronized ExtentTest pass(Throwable t, Media media) {
+		return getTest().pass(t, media);
 	}
 
-	public static ExtentTest info(Markup markup) {
-		return extentTest.info(markup);
+	public static synchronized ExtentTest info(Markup markup) {
+		return getTest().info(markup);
 	}
 
-	public static ExtentTest info(Media media) {
-		return extentTest.info(media);
+	public static synchronized ExtentTest info(Media media) {
+		return getTest().info(media);
 	}
 
-	public static ExtentTest info(String details) {
-		return extentTest.info(details);
+	public static synchronized ExtentTest info(String details) {
+		return getTest().info(details);
 	}
 
-	public static ExtentTest info(Throwable t) {
-		return extentTest.info(t);
+	public static synchronized ExtentTest info(Throwable t) {
+		return getTest().info(t);
 	}
 
-	public static ExtentTest info(String details, Media media) {
-		return extentTest.info(details, media);
+	public static synchronized ExtentTest info(String details, Media media) {
+		return getTest().info(details, media);
 	}
 
-	public static ExtentTest info(Throwable t, Media media) {
-		return extentTest.info(t, media);
+	public static synchronized ExtentTest info(Throwable t, Media media) {
+		return getTest().info(t, media);
 	}
 
-	public static ExtentTest skip(Markup markup) {
-		return extentTest.skip(markup);
+	public static synchronized ExtentTest skip(Markup markup) {
+		return getTest().skip(markup);
 	}
 
-	public static ExtentTest skip(Media media) {
-		return extentTest.skip(media);
+	public static synchronized ExtentTest skip(Media media) {
+		return getTest().skip(media);
 	}
 
-	public static ExtentTest skip(String details) {
-		return extentTest.skip(details);
+	public static synchronized ExtentTest skip(String details) {
+		return getTest().skip(details);
 	}
 
-	public static ExtentTest skip(Throwable t) {
-		return extentTest.skip(t);
+	public static synchronized ExtentTest skip(Throwable t) {
+		return getTest().skip(t);
 	}
 
-	public static ExtentTest skip(String details, Media media) {
-		return extentTest.skip(details, media);
+	public static synchronized ExtentTest skip(String details, Media media) {
+		return getTest().skip(details, media);
 	}
 
-	public static ExtentTest skip(Throwable t, Media media) {
-		return extentTest.skip(t, media);
+	public static synchronized ExtentTest skip(Throwable t, Media media) {
+		return getTest().skip(t, media);
 	}
 
-	public static ExtentTest warning(Markup markup) {
-		return extentTest.warning(markup);
+	public static synchronized ExtentTest warning(Markup markup) {
+		return getTest().warning(markup);
 	}
 
-	public static ExtentTest warning(Media media) {
-		return extentTest.warning(media);
+	public static synchronized ExtentTest warning(Media media) {
+		return getTest().warning(media);
 	}
 
-	public static ExtentTest warning(String details) {
-		return extentTest.warning(details);
+	public static synchronized ExtentTest warning(String details) {
+		return getTest().warning(details);
 	}
 
-	public static ExtentTest warning(Throwable t) {
-		return extentTest.warning(t);
+	public static synchronized ExtentTest warning(Throwable t) {
+		return getTest().warning(t);
 	}
 
-	public static ExtentTest warning(String details, Media media) {
-		return extentTest.warning(details, media);
+	public static synchronized ExtentTest warning(String details, Media media) {
+		return getTest().warning(details, media);
 	}
 
-	public static ExtentTest warning(Throwable t, Media media) {
-		return extentTest.warning(t, media);
+	public static synchronized ExtentTest warning(Throwable t, Media media) {
+		return getTest().warning(t, media);
 	}
 
-	public static ExtentTest log(Status status, Media media) {
-		return extentTest.log(status, media);
+	public static synchronized ExtentTest log(Status status, Media media) {
+		return getTest().log(status, media);
 	}
 
-	public static ExtentTest addScreenshotAtLogLevel(Status status, String path) {
-		return extentTest.log(status, MediaEntityBuilder.createScreenCaptureFromPath(path).build());
+	public static synchronized ExtentTest addScreenshotAtLogLevel(Status status, String path) {
+		return getTest().log(status, MediaEntityBuilder.createScreenCaptureFromPath(path).build());
 	}
 
-	public static ExtentTest addScreenshotAtLogLevel(Status status, String path, String title) {
-		return extentTest.log(status, MediaEntityBuilder.createScreenCaptureFromPath(path, title).build());
+	public static synchronized ExtentTest addScreenshotAtLogLevel(Status status, String path, String title) {
+		return getTest().log(status, MediaEntityBuilder.createScreenCaptureFromPath(path, title).build());
 	}
 
-	public static ExtentTest addScreenCaptureFromPath(String path) {
-		return extentTest.addScreenCaptureFromPath(path);
+	public static synchronized ExtentTest addScreenCaptureFromPath(String path) {
+		return getTest().addScreenCaptureFromPath(path);
 	}
 
-	public static ExtentTest addScreenCaptureFromPath(String path, String title) {
-		return extentTest.addScreenCaptureFromPath(path, title);
+	public static synchronized ExtentTest addScreenCaptureFromPath(String path, String title) {
+		return getTest().addScreenCaptureFromPath(path, title);
 	}
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 
-<suite name="Swag Labs Smoke Suite" verbose="5">
+<suite name="Swag Labs Smoke Suite" verbose="5" parallel = "tests" thread-count = "7">
 	<listeners>
 		<listener class-name="com.citibank.automation.helpers.RetryListenerClass" />
 	</listeners>
